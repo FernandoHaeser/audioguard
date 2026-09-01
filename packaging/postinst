@@ -1,0 +1,24 @@
+#!/bin/sh
+set -e
+
+mkdir -p /etc/audioguard/channels
+
+systemctl daemon-reload || true
+systemctl enable audioguard.service || true
+
+cat <<'EOF'
+
+audioguard instalado.
+
+O servico NAO foi iniciado automaticamente: /etc/audioguard/channels/ esta
+vazio, e "audioguard run-dir" sem nenhum canal configurado so fica falhando
+em loop.
+
+Proximo passo:
+  1. Copie/crie um channel.yaml em /etc/audioguard/channels/
+     (exemplo em /usr/share/doc/audioguard/examples/channel.yaml)
+  2. systemctl start audioguard
+
+EOF
+
+exit 0

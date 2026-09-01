@@ -1,0 +1,12 @@
+Package: audioguard
+Version: __VERSION__
+Section: net
+Priority: optional
+Architecture: amd64
+Depends: ffmpeg, systemd
+Maintainer: FernandoHaeser <https://github.com/FernandoHaeser>
+Homepage: https://github.com/FernandoHaeser/audioguard
+Description: Garante audio (real ou silencioso) em streams RTSP, entrega HLS pronto pra qualquer player
+ audioguard recebe um stream RTSP, detecta se a origem tem faixa de audio
+ valida e, se nao tiver, sintetiza silencio - resolve o caso de players
+ (Roku incluso) que exigem AAC estereo mesmo em canais 100% video.

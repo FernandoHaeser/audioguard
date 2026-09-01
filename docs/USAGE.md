@@ -82,7 +82,9 @@ Resumo rápido:
 
 ## Rodar em produção (systemd)
 
-Não incluso ainda como template pronto — planejado (ver `docs/ARCHITECTURE.md`, seção Supervisor). Enquanto isso, `audioguard run-dir` sob uma unit `simple` de systemd com `Restart=always` já cobre o caso básico:
+`audioguard run-dir` sob uma unit `simple` de systemd com `Restart=always` cobre o caso básico. O nome da unit importa se você integrar com um bridge externo (ver [`docs/INTEGRATIONS.md`](INTEGRATIONS.md)) — a convenção é `audioguard.service`.
+
+`/etc/systemd/system/audioguard.service`:
 
 ```ini
 [Unit]
@@ -90,7 +92,7 @@ Description=audioguard - garante audio nos canais HLS
 After=network.target
 
 [Service]
-ExecStart=/opt/audioguard/.venv/bin/audioguard run-dir /etc/audioguard/channels/
+ExecStart=/opt/audioguard/audioguard run-dir /etc/audioguard/channels/
 Restart=always
 RestartSec=3
 

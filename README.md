@@ -50,15 +50,22 @@ Vídeo continua em `copy` (zero perda). Só o áudio silencioso é codificado �
 
 ## Uso rápido
 
-**Binário pronto (recomendado):** baixe `audioguard-linux-x86_64.tar.gz` da [página de releases](../../releases), extraia e execute — sem Python, sem `pip install`.
+**`.deb` (recomendado, Debian/Ubuntu):** instala como serviço, resolve `ffmpeg` sozinho via `apt`.
 
 ```bash
-tar xzf audioguard-linux-x86_64.tar.gz
-cd audioguard-linux-x86_64
-./audioguard run examples/channel.yaml
+sudo apt install ./audioguard-focal.deb   # troque focal por noble ou 26.04 conforme sua distro
+# adicione um channel.yaml em /etc/audioguard/channels/, depois:
+sudo systemctl start audioguard
 ```
 
-Requer apenas `ffmpeg`/`ffprobe` instalados no sistema (não vêm embutidos no binário — são dependência externa, não redistribuída por licenciamento/tamanho).
+**Binário solto:** baixe `audioguard-<distro>.tar.gz` da [página de releases](../../releases), extraia e execute — sem Python, sem `pip install`, sem `apt`.
+
+```bash
+tar xzf audioguard-focal.tar.gz
+cd audioguard-focal
+sudo ./audioguard install-ffmpeg   # ou instale ffmpeg manualmente
+./audioguard run examples/channel.yaml
+```
 
 **A partir do código-fonte:**
 

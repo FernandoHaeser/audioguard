@@ -33,17 +33,34 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           apt-get update
-          apt-get install -y python3 python3-venv python3-pip python3-dev git binutils
+          apt-get install -y python3 python3-venv python3-pip python3-dev git binutils dpkg-dev
 
       - uses: actions/checkout@v4
 
       - name: Build binary + tar.gz
         run: ./scripts/build_binary.sh audioguard-${{ matrix.codename }}
 
+      - name: Resolve versao do pacote
+        id: version
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
+            V="${GITHUB_REF_NAME#v}"
+          else
+            V="0.0.0~dev+$(git rev-parse --short HEAD)"
+          fi
+          # dpkg nao aceita '-' fora de uma revisao debian no upstream version;
+          # normaliza pre-release tipo "0.1.0-alpha.1" -> "0.1.0~alpha.1"
+          echo "value=${V//-/\~}" >> "$GITHUB_OUTPUT"
+
+      - name: Build .deb
+        run: ./scripts/build_deb.sh "${{ steps.version.outputs.value }}" "audioguard-${{ matrix.codename }}"
+
       - uses: actions/upload-artifact@v4
         with:
           name: audioguard-${{ matrix.codename }}
-          path: dist/audioguard-${{ matrix.codename }}.tar.gz
+          path: |
+            dist/audioguard-${{ matrix.codename }}.tar.gz
+            dist/audioguard-${{ matrix.codename }}.deb
 
   release:
     needs: build
@@ -60,5 +77,7 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: dist/*.tar.gz
+          files: |
+            dist/*.tar.gz
+            dist/*.deb
           generate_release_notes: true

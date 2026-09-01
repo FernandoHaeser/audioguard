@@ -1,0 +1,11 @@
+[Unit]
+Description=audioguard - garante audio nos canais HLS
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/audioguard run-dir /etc/audioguard/channels
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
