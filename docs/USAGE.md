@@ -2,6 +2,8 @@
 
 ## Instalação (binário pronto)
 
+Alvo de compatibilidade: **Ubuntu 20.04+** (glibc 2.31+). O build no CI roda dentro de um container `ubuntu:20.04` de propósito — glibc é forward-compatible mas não backward-compatible, então buildar num Ubuntu mais novo geraria um binário que falha com `GLIBC_X.XX not found` em produção. Por isso `requires-python = ">=3.8"` no `pyproject.toml`: é o Python que o `apt` do 20.04 fornece nativamente.
+
 Cada tag `vX.Y.Z` gera automaticamente (`.github/workflows/release.yml`) um `audioguard-linux-x86_64.tar.gz` anexado à release no GitHub, contendo:
 
 ```

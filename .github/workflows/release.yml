@@ -8,13 +8,22 @@ on:
 
 jobs:
   build:
+    # builda dentro de um container Ubuntu 20.04 de proposito: o binario do
+    # PyInstaller linka contra a glibc da maquina que builda, e glibc e
+    # forward-compatible mas nao backward-compatible. Buildar no
+    # ubuntu-latest (24.04+, glibc mais nova) geraria um binario que falha
+    # com "GLIBC_X.XX not found" ao rodar em 20.04 - o alvo real de producao.
     runs-on: ubuntu-latest
+    container: ubuntu:20.04
     steps:
-      - uses: actions/checkout@v4
+      - name: Instala python3 e ferramentas de build (glibc do 20.04)
+        env:
+          DEBIAN_FRONTEND: noninteractive
+        run: |
+          apt-get update
+          apt-get install -y python3 python3-venv python3-pip git
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+      - uses: actions/checkout@v4
 
       - name: Build binary + tar.gz
         run: ./scripts/build_binary.sh audioguard-linux-x86_64

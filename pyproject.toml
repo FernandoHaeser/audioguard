@@ -3,7 +3,7 @@ name = "audioguard"
 version = "0.1.0"
 description = "Garante faixa de audio (real ou silenciosa) em qualquer stream de entrada e entrega HLS pronto para qualquer player."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.8"
 license = { text = "MIT" }
 dependencies = [
     "PyYAML>=6.0",
