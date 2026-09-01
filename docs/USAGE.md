@@ -84,9 +84,9 @@ Resumo rápido:
 
 ### Pré-requisito do `output.mode: publish`
 
-`audioguard` **não sobe um servidor RTSP/RTMP próprio** — o modo `publish` só empurra (`ffmpeg` client) pra um endpoint que já existe e aceita publicação. Precisa ter um relay rodando **antes** de apontar `publish_url` pra ele (ex.: [MediaMTX](https://github.com/bluenviron/mediamtx), `rtsp-simple-server`, ou o próprio packager existente, se ele aceitar ingest RTSP local).
+`audioguard` em si **não sobe servidor RTSP/RTMP próprio** — `ffmpeg` só empurra (client). Mas o `.deb` já resolve isso: vem com um relay RTSP embutido (`audioguard-relay`, baseado em [MediaMTX](https://github.com/bluenviron/mediamtx), MIT) numa unit separada (`audioguard-relay.service`), habilitada e **iniciada automaticamente** no `postinst` — escutando em `127.0.0.1:8554` desde o momento da instalação, sem precisar de nenhum passo extra. `publish_url: rtsp://127.0.0.1:8554/<canal>` já funciona de cara.
 
-Sem relay no ar, o `ffmpeg` do `audioguard` fica em loop de erro de conexão (o `supervisor.py` reinicia com backoff, nunca trava, mas também nunca fica saudável). Confere antes de testar:
+Se você instalou a partir do `tar.gz` solto (sem `apt`), não tem o relay embutido — precisa subir um por conta própria (MediaMTX, `rtsp-simple-server`, ou o próprio packager existente, se aceitar ingest RTSP local) antes de apontar `publish_url` pra ele. Sem relay no ar, o `ffmpeg` do `audioguard` fica em loop de erro de conexão (o `supervisor.py` reinicia com backoff, nunca trava, mas também nunca fica saudável). Confere antes de testar:
 
 ```bash
 ss -tlnp | grep <porta-do-relay>   # ex.: 8554 pra rtsp://.../porta 8554

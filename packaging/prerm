@@ -4,4 +4,7 @@ set -e
 systemctl stop audioguard.service || true
 systemctl disable audioguard.service || true
 
+systemctl stop audioguard-relay.service || true
+systemctl disable audioguard-relay.service || true
+
 exit 0

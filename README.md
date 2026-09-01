@@ -50,7 +50,7 @@ Vídeo continua em `copy` (zero perda). Só o áudio silencioso é codificado �
 
 ## Uso rápido
 
-**`.deb` (recomendado, Debian/Ubuntu):** instala como serviço, resolve `ffmpeg` sozinho via `apt`.
+**`.deb` (recomendado, Debian/Ubuntu):** instala como serviço, resolve `ffmpeg` sozinho via `apt`, e já traz um relay RTSP embutido (`audioguard-relay`, baseado em [MediaMTX](https://github.com/bluenviron/mediamtx)) rodando em `127.0.0.1:8554` — `output.mode: publish` funciona de cara, sem infra externa nenhuma.
 
 ```bash
 sudo apt install ./audioguard-focal.deb   # troque focal por noble ou 26.04 conforme sua distro

@@ -20,6 +20,29 @@ if ! command -v dpkg-deb >/dev/null; then
   exit 1
 fi
 
+# Relay RTSP (MediaMTX, MIT) bundlado - suporta output.mode: publish sem
+# depender de infra externa. Baixa a release mais recente pra linux_amd64.
+#
+# Nao encadear o curl direto num pipe com grep -m1/head -n1: essas ferramentas
+# fecham o pipe assim que acham a 1a ocorrencia, o curl leva broken pipe
+# tentando escrever o resto do corpo e sai com erro 23 - com `set -o
+# pipefail` isso aborta o script inteiro antes mesmo do download real
+# acontecer. Captura a resposta inteira numa variavel primeiro, so entao
+# processa (grep/sed rodando sobre uma string em memoria, sem pipe pro curl).
+if [ -z "${MEDIAMTX_VERSION:-}" ]; then
+  MEDIAMTX_RELEASE_JSON="$(curl -fsSL https://api.github.com/repos/bluenviron/mediamtx/releases/latest)"
+  MEDIAMTX_VERSION="$(printf '%s' "$MEDIAMTX_RELEASE_JSON" | sed -n 's/.*"tag_name": *"v\([^"]*\)".*/\1/p')"
+fi
+if [ -z "$MEDIAMTX_VERSION" ]; then
+  echo "nao consegui resolver a versao do mediamtx (rate limit da API do github?) - defina MEDIAMTX_VERSION manualmente" >&2
+  exit 1
+fi
+echo "bundlando mediamtx v${MEDIAMTX_VERSION}"
+curl -fsSL -o /tmp/mediamtx.tar.gz \
+  "https://github.com/bluenviron/mediamtx/releases/download/v${MEDIAMTX_VERSION}/mediamtx_v${MEDIAMTX_VERSION}_linux_amd64.tar.gz"
+mkdir -p /tmp/mediamtx_extract
+tar xzf /tmp/mediamtx.tar.gz -C /tmp/mediamtx_extract
+
 ROOT="dist/deb/${PKG_NAME}"
 rm -rf "$ROOT"
 mkdir -p \
@@ -32,7 +55,13 @@ mkdir -p \
 cp dist/audioguard "$ROOT/usr/local/bin/audioguard"
 chmod 755 "$ROOT/usr/local/bin/audioguard"
 
+cp /tmp/mediamtx_extract/mediamtx "$ROOT/usr/local/bin/audioguard-relay"
+chmod 755 "$ROOT/usr/local/bin/audioguard-relay"
+cp packaging/relay.yml "$ROOT/etc/audioguard/relay.yml"
+[ -f /tmp/mediamtx_extract/LICENSE ] && cp /tmp/mediamtx_extract/LICENSE "$ROOT/usr/share/doc/audioguard/LICENSE.mediamtx"
+
 cp packaging/audioguard.service "$ROOT/etc/systemd/system/audioguard.service"
+cp packaging/audioguard-relay.service "$ROOT/etc/systemd/system/audioguard-relay.service"
 cp examples/channel.yaml "$ROOT/usr/share/doc/audioguard/examples/channel.yaml"
 cp README.md LICENSE "$ROOT/usr/share/doc/audioguard/"
 

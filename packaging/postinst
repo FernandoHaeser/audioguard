@@ -4,15 +4,22 @@ set -e
 mkdir -p /etc/audioguard/channels
 
 systemctl daemon-reload || true
+
+# relay (MediaMTX) nao precisa de config previa - seguro subir junto,
+# diferente do audioguard.service (ver abaixo).
+systemctl enable --now audioguard-relay.service || true
+
 systemctl enable audioguard.service || true
 
 cat <<'EOF'
 
-audioguard instalado.
+audioguard instalado. Relay RTSP local (audioguard-relay, 127.0.0.1:8554)
+ja esta rodando - output.mode: publish ja funciona sem depender de infra
+externa.
 
-O servico NAO foi iniciado automaticamente: /etc/audioguard/channels/ esta
-vazio, e "audioguard run-dir" sem nenhum canal configurado so fica falhando
-em loop.
+O servico audioguard NAO foi iniciado automaticamente: /etc/audioguard/channels/
+esta vazio, e "audioguard run-dir" sem nenhum canal configurado so fica
+falhando em loop.
 
 Proximo passo:
   1. Copie/crie um channel.yaml em /etc/audioguard/channels/

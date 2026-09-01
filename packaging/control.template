@@ -10,3 +10,6 @@ Description: Garante audio (real ou silencioso) em streams RTSP, entrega HLS pro
  audioguard recebe um stream RTSP, detecta se a origem tem faixa de audio
  valida e, se nao tiver, sintetiza silencio - resolve o caso de players
  (Roku incluso) que exigem AAC estereo mesmo em canais 100% video.
+ .
+ Inclui um relay RTSP local (audioguard-relay, baseado em MediaMTX/MIT)
+ pra suportar output.mode: publish sem depender de infra externa.
