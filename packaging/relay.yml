@@ -1,12 +1,15 @@
-# Config minima do relay RTSP (MediaMTX) bundlado com o audioguard.
+# Config minima do relay RTSP/RTMP (MediaMTX) bundlado com o audioguard.
 # Existe pra suportar output.mode: publish sem depender de infra externa -
-# ver docs/INTEGRATIONS.md. So RTSP habilitado (unico protocolo que o
-# audioguard usa hoje); demais listeners desligados pra reduzir superficie.
+# ver docs/INTEGRATIONS.md. RTSP e RTMP habilitados (protocolos que o
+# audioguard suporta publicar hoje); demais listeners desligados pra
+# reduzir superficie.
 
 rtsp: yes
 rtspAddress: 127.0.0.1:8554
 
-rtmp: no
+rtmp: yes
+rtmpAddress: 127.0.0.1:1935
+
 hls: no
 webrtc: no
 srt: no
