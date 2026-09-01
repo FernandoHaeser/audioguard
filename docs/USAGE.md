@@ -72,10 +72,12 @@ Resumo rápido:
 | `id` | sim | — | identificador do canal (usado em logs) |
 | `source.url` | sim | — | URL da origem |
 | `source.protocol` | sim | — | `rtsp` (único suportado hoje — ver [`docs/SOURCES.md`](SOURCES.md)) |
-| `output.dir` | sim | — | diretório onde `.m3u8`/`.ts` são escritos |
+| `output.mode` | não | `hls` | `hls` (escreve arquivo) ou `publish` (empurra RTSP/RTMP pra um relay — ver [`docs/INTEGRATIONS.md`](INTEGRATIONS.md)) |
+| `output.dir` | sim se `mode: hls` | — | diretório onde `.m3u8`/`.ts` são escritos |
 | `output.segment_type` | não | `mpegts` | `mpegts` ou `fmp4` |
 | `output.hls_time` | não | `4` | duração do segmento em segundos |
 | `output.hls_list_size` | não | `6` | quantos segmentos ficam na playlist |
+| `output.publish_url` | sim se `mode: publish` | — | URL `rtsp://` ou `rtmp://` de destino |
 | `audio.mode` | não | `auto` | `auto` \| `force-passthrough` \| `force-silent` |
 | `audio.silent_bitrate_kbps` | não | `32` | bitrate do AAC sintético quando em modo silencioso |
 | `detector.probe_timeout_s` | não | `5.0` | timeout do `ffprobe` de detecção |

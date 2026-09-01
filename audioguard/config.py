@@ -48,12 +48,20 @@ def load_channel_config(path: str | Path) -> ChannelConfig:
     )
 
     out_raw = _require(raw, "output", ch_id)
-    output = OutputConfig(
-        dir=_require(out_raw, "dir", f"{ch_id}.output"),
-        segment_type=out_raw.get("segment_type", "mpegts"),
-        hls_time=int(out_raw.get("hls_time", 4)),
-        hls_list_size=int(out_raw.get("hls_list_size", 6)),
-    )
+    mode = out_raw.get("mode", "hls")
+    if mode == "publish":
+        output = OutputConfig(
+            mode="publish",
+            publish_url=_require(out_raw, "publish_url", f"{ch_id}.output"),
+        )
+    else:
+        output = OutputConfig(
+            mode="hls",
+            dir=_require(out_raw, "dir", f"{ch_id}.output"),
+            segment_type=out_raw.get("segment_type", "mpegts"),
+            hls_time=int(out_raw.get("hls_time", 4)),
+            hls_list_size=int(out_raw.get("hls_list_size", 6)),
+        )
 
     audio_raw = raw.get("audio", {})
     audio = AudioConfig(

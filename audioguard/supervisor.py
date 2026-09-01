@@ -60,7 +60,8 @@ class ChannelSupervisor:
             backoff = min(backoff * 2, self.max_backoff_s)
 
     def _run_once(self) -> None:
-        Path(self.config.output.dir).mkdir(parents=True, exist_ok=True)
+        if self.config.output.mode == "hls":
+            Path(self.config.output.dir).mkdir(parents=True, exist_ok=True)
 
         source = build_source(self.config.source)
         has_audio = self.detector.has_audio(source)

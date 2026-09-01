@@ -8,10 +8,15 @@ source:
   protocol: rtsp        # rtsp | rtmp | srt | hls
 
 output:
+  mode: hls             # hls (default, escreve .m3u8/.ts em `dir`) | publish
   dir: /var/audioguard/canal-01
   segment_type: mpegts  # mpegts (default, recomendado p/ Roku) | fmp4
   hls_time: 4
   hls_list_size: 6
+  # modo publish (alternativa a hls): empurra RTSP/RTMP pra um relay local em
+  # vez de escrever arquivo - uso tipico: virar a origem de um canal existente
+  # num pipeline que ja empacota/entrega HLS por conta propria.
+  # publish_url: rtsp://127.0.0.1:8554/canal-01
 
 audio:
   mode: auto             # auto (default) | force-passthrough | force-silent

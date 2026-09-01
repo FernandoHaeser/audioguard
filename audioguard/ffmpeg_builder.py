@@ -21,10 +21,16 @@ class AudioConfig:
 
 @dataclass(frozen=True)
 class OutputConfig:
-    dir: str
+    # modo "hls" (default): escreve .m3u8/.ts em `dir`, pra servir via HTTP.
+    # modo "publish": empurra o stream corrigido pra um endpoint RTSP/RTMP
+    # (ex.: um relay local) em vez de escrever arquivo - uso tipico: virar a
+    # nova origem de um canal num pipeline existente (ver docs/INTEGRATIONS.md).
+    mode: str = "hls"  # hls | publish
+    dir: str = ""
     segment_type: str = "mpegts"  # mpegts | fmp4
     hls_time: int = 4
     hls_list_size: int = 6
+    publish_url: str = ""  # obrigatorio quando mode == "publish"
 
 
 def _resolve_use_silent(audio: AudioConfig, has_audio: bool) -> bool:
@@ -64,13 +70,22 @@ def build_ffmpeg_args(
     else:
         args += ["-c:v", "copy", "-c:a", "copy"]
 
-    args += [
-        "-f", "hls",
-        "-hls_time", str(output.hls_time),
-        "-hls_list_size", str(output.hls_list_size),
-        "-hls_segment_type", output.segment_type,
-        "-hls_flags", "delete_segments+independent_segments",
-        f"{output.dir}/index.m3u8",
-    ]
+    if output.mode == "publish":
+        if not output.publish_url:
+            raise ValueError("output.publish_url e obrigatorio quando output.mode == 'publish'")
+        muxer = "rtsp" if output.publish_url.startswith("rtsp://") else "flv"  # flv = mux de RTMP
+        args += ["-f", muxer]
+        if muxer == "rtsp":
+            args += ["-rtsp_transport", "tcp"]
+        args += [output.publish_url]
+    else:
+        args += [
+            "-f", "hls",
+            "-hls_time", str(output.hls_time),
+            "-hls_list_size", str(output.hls_list_size),
+            "-hls_segment_type", output.segment_type,
+            "-hls_flags", "delete_segments+independent_segments",
+            f"{output.dir}/index.m3u8",
+        ]
 
     return args
