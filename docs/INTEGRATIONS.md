@@ -2,13 +2,13 @@
 
 O `audioguard` é agnóstico de quem gera os arquivos de config em `CHANNELS_DIR` — ele só lê `*.yaml`/`*.yml` desse diretório (ver `cli.py::cmd_run_dir`). Isso permite integrações externas escreverem configs automaticamente sem o `audioguard` precisar saber nada sobre elas.
 
-## Referência real: `audioguard_bridge`
+## Referência real: bridge de orquestrador
 
-Existe uma integração real em produção (fora deste repo, código privado): `audioguard_bridge.py`, parte do orquestrador de canais [[orquestrador privado]](https://github.com/FernandoHaeser) (não open-source). Documentado aqui como referência de contrato — se você for integrar `audioguard` com o seu próprio orquestrador, esse é o padrão validado.
+Existe uma integração real em produção (fora deste repo, código privado, específico de uma stack fechada) seguindo o padrão abaixo. Documentado aqui como referência de contrato — se você for integrar `audioguard` com o seu próprio orquestrador, esse é o padrão validado.
 
 ### O que ele resolve
 
-Um orquestrador de canais já sabe, por canal, se existe uma faixa de áudio real configurada na origem (no caso do [orquestrador privado], via `abitrate` por pipe). A integração usa isso pra rodar `audioguard` **só** nos canais que têm vídeo mas não têm áudio — os demais continuam no pipeline normal, sem nunca passar pelo `audioguard`.
+Um orquestrador de canais já sabe, por canal, se existe uma faixa de áudio real configurada na origem (ex.: via algum campo de bitrate por pipe/track). A integração usa isso pra rodar `audioguard` **só** nos canais que têm vídeo mas não têm áudio — os demais continuam no pipeline normal, sem nunca passar pelo `audioguard`.
 
 ### Fluxo (usa `output.mode: publish`, não `hls`)
 
