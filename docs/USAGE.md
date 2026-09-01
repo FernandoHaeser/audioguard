@@ -82,6 +82,16 @@ Resumo rápido:
 | `audio.silent_bitrate_kbps` | não | `32` | bitrate do AAC sintético quando em modo silencioso |
 | `detector.probe_timeout_s` | não | `5.0` | timeout do `ffprobe` de detecção |
 
+### Pré-requisito do `output.mode: publish`
+
+`audioguard` **não sobe um servidor RTSP/RTMP próprio** — o modo `publish` só empurra (`ffmpeg` client) pra um endpoint que já existe e aceita publicação. Precisa ter um relay rodando **antes** de apontar `publish_url` pra ele (ex.: [MediaMTX](https://github.com/bluenviron/mediamtx), `rtsp-simple-server`, ou o próprio packager existente, se ele aceitar ingest RTSP local).
+
+Sem relay no ar, o `ffmpeg` do `audioguard` fica em loop de erro de conexão (o `supervisor.py` reinicia com backoff, nunca trava, mas também nunca fica saudável). Confere antes de testar:
+
+```bash
+ss -tlnp | grep <porta-do-relay>   # ex.: 8554 pra rtsp://.../porta 8554
+```
+
 ## Rodar em produção (systemd)
 
 `audioguard run-dir` sob uma unit `simple` de systemd com `Restart=always` cobre o caso básico. O nome da unit importa se você integrar com um bridge externo (ver [`docs/INTEGRATIONS.md`](INTEGRATIONS.md)) — a convenção é `audioguard.service`.
