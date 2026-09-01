@@ -93,7 +93,7 @@ Um padrão relatado (não confirmado neste projeto ainda) é que Roku tem proble
 
 ## Status
 
-Projeto em fase de design. Este README e `docs/ARCHITECTURE.md` são a espec inicial; implementação ainda não começou.
+Alpha. Implementação funcional (`sources/`, `detector.py`, `ffmpeg_builder.py`, `supervisor.py`, `cli.py`), testada com 12 testes unitários + validação end-to-end real com ffmpeg. Binários pré-compilados disponíveis em [Releases](../../releases) para `focal` (20.04), `noble` (24.04) e `26.04`.
 
 ## Licença
 

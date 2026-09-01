@@ -8,15 +8,27 @@ on:
 
 jobs:
   build:
-    # builda dentro de um container Ubuntu 20.04 de proposito: o binario do
-    # PyInstaller linka contra a glibc da maquina que builda, e glibc e
-    # forward-compatible mas nao backward-compatible. Buildar no
-    # ubuntu-latest (24.04+, glibc mais nova) geraria um binario que falha
-    # com "GLIBC_X.XX not found" ao rodar em 20.04 - o alvo real de producao.
+    # builda dentro de containers das distros-alvo de proposito: o binario
+    # do PyInstaller linka contra a glibc da maquina que builda, e glibc e
+    # forward-compatible mas nao backward-compatible. Cada entrada do matrix
+    # gera um binario nomeado pelo codename, buildado com a glibc daquela
+    # distro especifica - evita "GLIBC_X.XX not found" em producao mesmo
+    # que, na pratica, o build do focal (glibc mais antiga) ja rode nas
+    # distros mais novas tambem.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - codename: focal    # Ubuntu 20.04 LTS
+            image: ubuntu:20.04
+          - codename: noble    # Ubuntu 24.04 LTS
+            image: ubuntu:24.04
+          - codename: 26.04    # Ubuntu 26.04 LTS (Resolute Raccoon)
+            image: ubuntu:26.04
     runs-on: ubuntu-latest
-    container: ubuntu:20.04
+    container: ${{ matrix.image }}
     steps:
-      - name: Instala python3 e ferramentas de build (glibc do 20.04)
+      - name: Instala python3 e ferramentas de build
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
@@ -26,12 +38,12 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build binary + tar.gz
-        run: ./scripts/build_binary.sh audioguard-linux-x86_64
+        run: ./scripts/build_binary.sh audioguard-${{ matrix.codename }}
 
       - uses: actions/upload-artifact@v4
         with:
-          name: audioguard-linux-x86_64
-          path: dist/audioguard-linux-x86_64.tar.gz
+          name: audioguard-${{ matrix.codename }}
+          path: dist/audioguard-${{ matrix.codename }}.tar.gz
 
   release:
     needs: build
@@ -42,10 +54,11 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: audioguard-linux-x86_64
+          pattern: audioguard-*
           path: dist/
+          merge-multiple: true
 
       - uses: softprops/action-gh-release@v2
         with:
-          files: dist/audioguard-linux-x86_64.tar.gz
+          files: dist/*.tar.gz
           generate_release_notes: true
