@@ -1,0 +1,24 @@
+# Exemplo de config de canal para audioguard.
+# Um arquivo por canal, tipicamente em /etc/audioguard/channels/<id>.yaml
+
+id: canal-01
+
+source:
+  url: rtsp://origem.exemplo.com:554/canal01
+  protocol: rtsp        # rtsp | rtmp | srt | hls
+
+output:
+  dir: /var/audioguard/canal-01
+  segment_type: mpegts  # mpegts (default, recomendado p/ Roku) | fmp4
+  hls_time: 4
+  hls_list_size: 6
+
+audio:
+  mode: auto             # auto (default) | force-passthrough | force-silent
+  silent_bitrate_kbps: 32
+  silent_sample_rate: 48000
+  silent_channels: 2
+
+# opcional: sobrescreve o timeout do ffprobe usado na detecção (segundos)
+detector:
+  probe_timeout_s: 5

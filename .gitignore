@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# venv
+.venv/
+.build-venv/
+venv/
+env/
+
+# build binario (pyinstaller)
+*.spec
+
+# testes / cobertura
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# saida de HLS gerada em runtime (nunca deve ir pro repo)
+*.m3u8
+*.ts
+*.m4s
+/var/audioguard/
+output/
+
+# configs de canal reais (podem conter URL/credencial de origem)
+channels/
+!examples/channel.yaml
+
+# editor / SO
+.DS_Store
+.vscode/
+.idea/
+*.swp

@@ -1,0 +1,42 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Build binary + tar.gz
+        run: ./scripts/build_binary.sh audioguard-linux-x86_64
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: audioguard-linux-x86_64
+          path: dist/audioguard-linux-x86_64.tar.gz
+
+  release:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: audioguard-linux-x86_64
+          path: dist/
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/audioguard-linux-x86_64.tar.gz
+          generate_release_notes: true

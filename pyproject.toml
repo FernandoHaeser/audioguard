@@ -1,0 +1,23 @@
+[project]
+name = "audioguard"
+version = "0.1.0"
+description = "Garante faixa de audio (real ou silenciosa) em qualquer stream de entrada e entrega HLS pronto para qualquer player."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0", "pyinstaller>=6.0"]
+
+[project.scripts]
+audioguard = "audioguard.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["audioguard*"]
