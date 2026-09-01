@@ -98,3 +98,4 @@ Projeto em fase de design. Este README e `docs/ARCHITECTURE.md` são a espec ini
 ## Licença
 
 MIT — ver [`LICENSE`](LICENSE).
+
