@@ -18,6 +18,8 @@ câmera sem áudio --RTSP--> audioguard --publish RTSP--> [origem do canal no or
 
 Em vez do `audioguard` servir HLS final pro cliente, ele vira uma **fonte substituta**: publica RTSP corrigido (vídeo real + áudio, sintético ou passthrough) pra um relay local, e o bridge troca a URL de origem do canal no orquestrador pra apontar pra esse relay em vez da câmera direto. O resto do pipeline (packager, DRM, entrega) nunca fica sabendo que o `audioguard` existe.
 
+![Fluxo de deteccao, publicacao e troca de origem](assets/diagrams/sequence.png){ .arch-diagram }
+
 Passo a passo do ciclo (roda a cada 60s via systemd timer):
 
 1. Consulta o orquestrador: quais canais têm vídeo mas não têm áudio configurado.

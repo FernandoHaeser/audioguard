@@ -33,6 +33,9 @@ output/
 channels/
 !examples/channel.yaml
 
+# site mkdocs gerado (site-fonte fica em docs/, publicado via CI)
+/site/
+
 # editor / SO
 .DS_Store
 .vscode/

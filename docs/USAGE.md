@@ -63,7 +63,7 @@ Sobe uma thread supervisora por arquivo `*.yaml`/`*.yml` encontrado no diretóri
 
 ## Config de canal
 
-Ver [`examples/channel.yaml`](../examples/channel.yaml) comentado, e a referência de campos em [`docs/ARCHITECTURE.md`](ARCHITECTURE.md#1-config-por-canal).
+Ver [`examples/channel.yaml`](https://github.com/FernandoHaeser/audioguard/blob/develop/examples/channel.yaml) comentado, e a referência de campos em [Arquitetura](ARCHITECTURE.md#1-config-por-canal).
 
 Resumo rápido:
 

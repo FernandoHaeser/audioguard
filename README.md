@@ -1,5 +1,7 @@
 # audioguard
 
+Documentação completa: **[fernandohaeser.github.io/audioguard](https://fernandohaeser.github.io/audioguard/)**
+
 Serviço open-source, single-purpose: recebe um stream de entrada, garante que a saída sempre tenha uma faixa de áudio válida — real, quando existe na origem, ou silenciosa sintética, quando não existe — e entrega HLS pronto para qualquer player, incluindo Roku.
 
 Protocolo de origem suportado hoje: **RTSP**. Arquitetura pensada desde o início pra outros protocolos (RTMP, SRT, HLS) entrarem sem mexer no resto do sistema — ver [`docs/SOURCES.md`](docs/SOURCES.md).

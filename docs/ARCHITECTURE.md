@@ -4,6 +4,8 @@
 
 Um serviço que roda por canal (1 processo FFmpeg supervisionado por canal), decide automaticamente se precisa injetar áudio silencioso, e produz HLS pronto para consumo direto por qualquer player — sem depender de flags de manifest, sem depender de comportamento específico de nenhum packetizer downstream fechado.
 
+![Arquitetura do audioguard](assets/diagrams/architecture.png){ .arch-diagram }
+
 ## Componentes
 
 ```
