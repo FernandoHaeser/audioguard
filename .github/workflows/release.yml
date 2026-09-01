@@ -42,11 +42,12 @@ jobs:
 
       - name: Resolve versao do pacote
         id: version
+        shell: bash
         run: |
           if [[ "${GITHUB_REF}" == refs/tags/v* ]]; then
             V="${GITHUB_REF_NAME#v}"
           else
-            V="0.0.0~dev+$(git rev-parse --short HEAD)"
+            V="0.0.0~dev+${GITHUB_SHA:0:7}"
           fi
           # dpkg nao aceita '-' fora de uma revisao debian no upstream version;
           # normaliza pre-release tipo "0.1.0-alpha.1" -> "0.1.0~alpha.1"
